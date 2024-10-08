@@ -56,7 +56,7 @@ public class ChecksumHttpTrigger
        
 
         String signature = getChecksum(pubkey, checksum);
-        return request.createResponseBuilder(HttpStatus.OK).body("Hellaaaa, " + signature).build();
+        return request.createResponseBuilder(HttpStatus.OK).body(signature).build();
     }
 
 
