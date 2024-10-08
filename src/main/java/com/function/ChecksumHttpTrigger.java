@@ -45,15 +45,16 @@ public class ChecksumHttpTrigger
             return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please pass checksum value on the query string or in the request body").build();
         }
         
-
+        /*
         String queryPubkey = request.getQueryParameters().get("pubkey");
         String pubkey = request.getBody().orElse(queryPubkey);
-
         if (pubkey == null) 
         {
             return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please pass pubkey value on the query string or in the request body").build();
         }
+        */
        
+        String pubkey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsSc3/q/AFJg4YvGDxdCDFfU1CJpdjAYm5IB5nFDBgtFsYot5iSp8s6UXk7YEWyaID9P16jphP/a9q0SUQL/S/MX+ifrGB5ZFkpq0wFDPnudU4rDG70WapNFywI0f9Vf1kXwko3yjtKUl/D20aW+Hx4nwpa7IHGMEcFfStV7aemi1i580rcEfNlUahpK7xRW8+jztF6F4F+yqt9u+RneNT6ldfUM46W2+hRxlGNN8qMKcHvJ/JpqBh+KoPhxh1LG72rEH/jkJGnPGf4uQhpZkU1xMx/5rbFrvh2sUa0uI789LgatS27NSbBciW5Hj/jXYsb/OI14LC5+B9828QZVyVwIDAQAB";
 
         String signature = getChecksum(pubkey, checksum);
         return request.createResponseBuilder(HttpStatus.OK).body(signature).build();
@@ -61,6 +62,7 @@ public class ChecksumHttpTrigger
 
 
     public static String getChecksum(String PublicKey, String StrToEnc) {
+        
         String ArrivedHash = "";
         try 
         {
@@ -76,8 +78,9 @@ public class ChecksumHttpTrigger
     private static String encryptDataRSA(String message, String PubKey)
         throws InvalidAlgorithmParameterException, InvalidAlgorithmParameterException 
         {
+           
             String encodedEncryptedBytes = "";
-            String hashString = "";
+            String hashString = PubKey;
             try 
             {
                 byte[] encryptedBytes = encryptRSA(message.getBytes(), PubKey);
@@ -89,12 +92,11 @@ public class ChecksumHttpTrigger
             {
                 System.out.println("Exception " + ex.getMessage());
             }
-             return hashString;
+            return hashString;
+             
         }
 
-        private static byte[] encryptRSA(byte[] data, String pub) throws NoSuchAlgorithmException,
-        NoSuchPaddingException,
-        InvalidKeyException, IllegalBlockSizeException, BadPaddingException 
+        private static byte[] encryptRSA(byte[] data, String pub) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException 
         {
             byte[] publicBytes = Base64.decodeBase64(pub.getBytes());
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicBytes);
@@ -109,6 +111,6 @@ public class ChecksumHttpTrigger
             }
             Cipher ciph = Cipher.getInstance("RSA/ECB/NoPadding");
             ciph.init(Cipher.ENCRYPT_MODE, pubKey);
-        return ciph.doFinal(data);
+            return ciph.doFinal(data);
         }
 }
